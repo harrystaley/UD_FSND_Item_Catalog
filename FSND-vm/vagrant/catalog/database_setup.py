@@ -1,24 +1,40 @@
 import sys
 
-from sqlalchemy import
-Column, ForeignKey, Integer, String
-
-from sqlalchemy.ext.declarative import
-declarative_base
-
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
 from sqlalchemy import create_engine
 
 base = declarative_base()
-# end beginning config code
+# END BEGINNING CONFIG CODE
 # place class defs between this and the end config code
 
-    restraunt_id = Collumn(
-        integer, ForeignKey('restraunt.id'))
-    restraunt = relationship(Restraunt)
+
+class Restaurant(base):
+    """ Class defines the table for the restraunts in the database """
+    # defines the name of the table
+    __tablename__ = 'restaurant'
+    # mapper variables for each of the atributes of a restraunt
+    name = Column(String(80), nullable=False)
+    id = Column(Integer, primary_key=True)
 
 
-# begin end config code
+class MenuItem(base):
+    """
+    This class defines the table for the items that will be on the menu.
+    """
+    # defines the name of the table
+    __tablename__ = 'menu_item'
+    restraunt = relationship(Restaurant)
+
+    # mapper variables for each of the atributes of a menu item
+    name = Column(String(80), nullable=False)
+    id = Column(Integer, primary_key=True)
+    course = Column(String(250))
+    description = Column(String(250))
+    price = Column(String(8))
+    restraunt_id = Column(Integer, ForeignKey('restaurant.id'))
+
+# END CONFIG CODE
 engine = create_engine('sqlite:///restrauntmenu.db')
 base.metadata.create_all(engine)
