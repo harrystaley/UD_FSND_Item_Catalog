@@ -19,6 +19,25 @@ class WebserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """ handles the get requests for the web server """
         try:
+            # renders the /restaurants/new page
+            if self.path.endswith("/restaurants/new"):
+                self.send_response(200)
+                self.send_header('content-type', 'text/html')
+                self.end_headers()
+                template = "/resturants/new"
+                output = ''
+                output += "<html><body>"
+                output += "<h2>New Restaurant</h2>"
+                output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/new'>"
+                output += "<input name='RestaurantName' type='text'>"
+                output += "<input type='submit' value='Submit'>"
+                output += "</form>"
+                output += "</body></html>"
+                self.wfile.write(output)
+                print "The page %s has been rendered." % template
+                return
+
+            # renders the /restaurants page
             if self.path.endswith("/restaurants"):
                 self.send_response(200)
                 self.send_header('content-type', 'text/html')
@@ -28,9 +47,14 @@ class WebserverHandler(BaseHTTPRequestHandler):
                 output = ''
                 output += "<html><body>"
                 output += "Restaurants"
+                output += "<br><br>"
+                output += "<a href='/restaurants/new'>New Restaurant</a>"
+                output += "<br>"
                 for restaurant in restaurants:
                     output += restaurant.name
-                    output += "<br>"
+                    output += "<br><a href='#'>Edit</a>"
+                    output += "<br><a href='#'>Delete</a>"
+                    output += "<br><br>"
 
                 output += "</body></html>"
                 self.wfile.write(output)
@@ -41,23 +65,25 @@ class WebserverHandler(BaseHTTPRequestHandler):
             self.send_error(404, "File not found %s" % self.path)
 
     def do_POST(self):
+        """ Handles the post requests for the HTTP server """
         try:
-            self.send_response(301)
-            self.end_headers()
-            ctype, pdict = cgi.parse_header(self.headers
-                                            .getheader('content-type'))
-            if ctype == 'multipart/form-data':
-                fields = cgi.parse_multipart(self.rfile, pdict)
-                messagecontent = fields.get('message')
+            # Handles the post request from /restaurants/new
+            if self.path.endswith("/restaurants/new"):
+                ctype, pdict = cgi.parse_header(self.headers
+                                                .getheader('content-type'))
+                if ctype == 'multipart/form-data':
+                    fields = cgi.parse_multipart(self.rfile, pdict)
+                    restaurantform = fields.get('RestaurantName')
 
-            output = ""
-            output += "<html><body>"
-            output += " <h2> Okay, how about this: </h2>"
-            output += "<h1> %s </h1>" % messagecontent[0]
-            output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-            output += "</body></html>"
-            self.wfile.write(output)
-            print output
+                newrestaurant = Restaurant(name=restaurantform[0])
+                session.add(newrestaurant)
+                session.commit()
+
+                self.send_response(301)
+                self.send_header('content-type', 'text/html')
+                self.send_header('Location', '/restaurants')
+                self.end_headers()
+                return
         except:
             pass
 
