@@ -19,10 +19,36 @@ class WebserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """ handles the get requests for the web server """
         try:
+            # renders the delete restaurant page
+            if self.path.endswith("/delete"):
+                resid = self.path.split("/")[2]
+                template = "/resturants/%s/delete" % resid
+                print "resid = %s" % resid
+                dbq = session.query(Restaurant).filter_by(id=int(resid)
+                                                          ).one()
+                if not dbq == []:
+                    self.send_response(200)
+                    self.send_header('content-type', 'text/html')
+                    self.end_headers()
+                    name = dbq.name
+                    print "name =%s" % name
+                    output = ''
+                    output += "<html><body>"
+                    output += "<h2>Delete %s?</h2>" % name
+                    output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/%s/delete'>" % resid
+                    output += "<input type='submit' value='Yes'>"
+                    output += "</form>"
+                    output += "</body></html>"
+                    self.wfile.write(output)
+                    print "The page %s has been rendered." % template
+                    return
+                else:
+                    print "The page %s did not render." % template
+
             # renders the edit restaurant page
             if self.path.endswith("/edit"):
-                template = "/resturants//edit"
                 resid = self.path.split("/")[2]
+                template = "/resturants/%s/edit" % resid
                 print "resid = %s" % resid
                 dbq = session.query(Restaurant).filter_by(id=int(resid)
                                                           ).one()
@@ -79,8 +105,8 @@ class WebserverHandler(BaseHTTPRequestHandler):
                 output += "<br>"
                 for restaurant in restaurants:
                     output += restaurant.name
-                    output += "<br><a href='/restaurants/%s/edit'>Edit</a>" % restaurant.id
-                    output += "<br><a href='#'>Delete</a>"
+                    output += "<a href='/restaurants/%s/edit'> Edit</a>" % restaurant.id
+                    output += "<a href='/restaurants/%s/delete'> Delete</a>" % restaurant.id
                     output += "<br><br>"
 
                 output += "</body></html>"
@@ -112,7 +138,7 @@ class WebserverHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return
 
-            # Handles the post request from /restaurants/new
+            # Handles the post request from the edit page
             if self.path.endswith("/edit"):
                 ctype, pdict = cgi.parse_header(self.headers
                                                 .getheader('content-type'))
@@ -125,6 +151,20 @@ class WebserverHandler(BaseHTTPRequestHandler):
                 if restaurant:
                     restaurant.name = restaurantform[0]
                 session.add(restaurant)
+                session.commit()
+
+                self.send_response(301)
+                self.send_header('content-type', 'text/html')
+                self.send_header('Location', '/restaurants')
+                self.end_headers()
+                return
+
+            # Handles the post request from the delete page
+            if self.path.endswith("/delete"):
+                resid = self.path.split("/")[2]
+                restaurant = session.query(Restaurant).filter_by(id=resid
+                                                                 ).one()
+                session.delete(restaurant)
                 session.commit()
 
                 self.send_response(301)
