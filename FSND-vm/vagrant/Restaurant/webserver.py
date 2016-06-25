@@ -1,5 +1,17 @@
 import cgi
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from database_setup import Base, Restaurant, MenuItem
+
+
+__author__ = "Harry Staley <staleyh@gmail.com>"
+__version__ = "1.0"
+
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 
 class WebserverHandler(BaseHTTPRequestHandler):
@@ -7,17 +19,22 @@ class WebserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """ handles the get requests for the web server """
         try:
-            if self.path.endswith("/hello"):
+            if self.path.endswith("/restaurants"):
                 self.send_response(200)
                 self.send_header('content-type', 'text/html')
                 self.end_headers()
-                output = ""
+                template = "/resturants"
+                restaurants = session.query(Restaurant).all()
+                output = ''
                 output += "<html><body>"
-                output += "<h1>Hello!</h1>"
-                output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
+                output += "Restaurants"
+                for restaurant in restaurants:
+                    output += restaurant.name
+                    output += "<br>"
+
                 output += "</body></html>"
                 self.wfile.write(output)
-                print output
+                print "The page %s has been rendered." % template
                 return
 
         except IOError:
@@ -50,10 +67,10 @@ def main():
     try:
         port = 8080
         server = HTTPServer(('', port), WebserverHandler)
-        print "Server running on port %s" % port
+        print "Server running on port %s press ctrl+c to stop..." % port
         server.serve_forever()
     except KeyboardInterrupt:
-        print "^C entered, stopping web server..."
+        print "ctrl+c entered, stopping web server..."
         server.socket.close()
 
 
