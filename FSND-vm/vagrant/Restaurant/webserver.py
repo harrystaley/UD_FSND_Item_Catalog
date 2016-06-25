@@ -19,8 +19,35 @@ class WebserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         """ handles the get requests for the web server """
         try:
+            # renders the edit restaurant page
+            if self.path.endswith("/edit"):
+                template = "/resturants//edit"
+                resid = self.path.split("/")[2]
+                print "resid = %s" % resid
+                dbq = session.query(Restaurant).filter_by(id=int(resid)
+                                                          ).one()
+                if not dbq == []:
+                    self.send_response(200)
+                    self.send_header('content-type', 'text/html')
+                    self.end_headers()
+                    name = dbq.name
+                    print "name =%s" % name
+                    output = ''
+                    output += "<html><body>"
+                    output += "<h2>Edit Restaurant</h2>"
+                    output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/%s/edit'>" % resid
+                    output += "<input name='RestaurantName' type='text' placeholder=%s>" % name
+                    output += "<input type='submit' value='Submit'>"
+                    output += "</form>"
+                    output += "</body></html>"
+                    self.wfile.write(output)
+                    print "The page %s has been rendered." % template
+                    return
+                else:
+                    print "The page %s did not render." % template
+
             # renders the /restaurants/new page
-            if self.path.endswith("/restaurants/new"):
+            if self.path.endswith("/new"):
                 self.send_response(200)
                 self.send_header('content-type', 'text/html')
                 self.end_headers()
@@ -52,7 +79,7 @@ class WebserverHandler(BaseHTTPRequestHandler):
                 output += "<br>"
                 for restaurant in restaurants:
                     output += restaurant.name
-                    output += "<br><a href='#'>Edit</a>"
+                    output += "<br><a href='/restaurants/%s/edit'>Edit</a>" % restaurant.id
                     output += "<br><a href='#'>Delete</a>"
                     output += "<br><br>"
 
@@ -68,7 +95,7 @@ class WebserverHandler(BaseHTTPRequestHandler):
         """ Handles the post requests for the HTTP server """
         try:
             # Handles the post request from /restaurants/new
-            if self.path.endswith("/restaurants/new"):
+            if self.path.endswith("/new"):
                 ctype, pdict = cgi.parse_header(self.headers
                                                 .getheader('content-type'))
                 if ctype == 'multipart/form-data':
@@ -77,6 +104,27 @@ class WebserverHandler(BaseHTTPRequestHandler):
 
                 newrestaurant = Restaurant(name=restaurantform[0])
                 session.add(newrestaurant)
+                session.commit()
+
+                self.send_response(301)
+                self.send_header('content-type', 'text/html')
+                self.send_header('Location', '/restaurants')
+                self.end_headers()
+                return
+
+            # Handles the post request from /restaurants/new
+            if self.path.endswith("/edit"):
+                ctype, pdict = cgi.parse_header(self.headers
+                                                .getheader('content-type'))
+                if ctype == 'multipart/form-data':
+                    fields = cgi.parse_multipart(self.rfile, pdict)
+                    restaurantform = fields.get('RestaurantName')
+                resid = self.path.split("/")[2]
+                restaurant = session.query(Restaurant).filter_by(id=resid
+                                                                 ).one()
+                if restaurant:
+                    restaurant.name = restaurantform[0]
+                session.add(restaurant)
                 session.commit()
 
                 self.send_response(301)
