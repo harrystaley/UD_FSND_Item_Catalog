@@ -1,5 +1,6 @@
 
 from flask import Flask
+from flask import render_template
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -16,23 +17,17 @@ session = DBSession()
 
 
 @app.route('/')
+def GetRestaurants():
+    restaurants = session.query(Restaurant).all()
+    return render_template('restaurants.html', restaurants=restaurants)
+
+
 @app.route('/restaurant/<int:restaurant_id>/')
-def GetRestaurant(restaurant_id):
+def GetMenu(restaurant_id):
     """ This a test function for the display of the flask implementation """
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id)
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
-    output = ''
-    for item in items:
-        output += item.name
-        output += "<br>"
-        output += item.course
-        output += "<br>"
-        output += item.description
-        output += "<br>"
-        output += item.price
-        output += "<br>"
-        output += "<br>"
-    return output
+    return render_template('menu.html', items=items)
 
 
 # Task 1: Create route for newMenuItem function here

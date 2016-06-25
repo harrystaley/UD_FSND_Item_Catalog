@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Restaurant Menus</title>
+  </head>
+  <body>
+    <h1>WHere would you like to eat?</h1>
+    <br>
+    {% for restaurant in restaurants %}
+      <a href="/restaurant/{{restaurant.id}}/">{{restaurant.name}}</a>
+      <br>
+    {% endfor %}
+  </body>
+</html>
