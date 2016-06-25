@@ -38,18 +38,21 @@ def GetRestaurant(restaurant_id):
 # Task 1: Create route for newMenuItem function here
 @app.route('/restaurant/<int:restaurant_id>/newitem')
 def newMenuItem(restaurant_id):
+    """ method to add a new menu item """
     return "page to create a new menu item. Task 1 complete!"
 
 
 # Task 2: Create route for editMenuItem function here
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit')
 def editMenuItem(restaurant_id, menu_id):
+    """ method to edit a menu item """
     return "page to edit a menu item. Task 2 complete!"
 
 
 # Task 3: Create a route for deleteMenuItem function here
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete')
 def deleteMenuItem(restaurant_id, menu_id):
+    """ method to delete the menu item """
     return "page to delete a menu item. Task 3 complete!"
 
 if __name__ == '__main__':
