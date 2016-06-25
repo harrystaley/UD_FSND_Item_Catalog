@@ -25,6 +25,13 @@ def TestRestaurant():
     for item in items:
         output += item.name
         output += "<br>"
+        output += item.course
+        output += "<br>"
+        output += item.description
+        output += "<br>"
+        output += item.price
+        output += "<br>"
+        output += "<br>"
 
     return output
 
