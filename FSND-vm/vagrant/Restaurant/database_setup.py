@@ -1,5 +1,5 @@
+import os
 import sys
-
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -34,6 +34,16 @@ class MenuItem(Base):
     description = Column(String(250))
     price = Column(String(8))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
+
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price,
+            'course': self.course
+        }
 
 # END CONFIG CODE
 engine = create_engine('sqlite:///restaurantmenu.db')
