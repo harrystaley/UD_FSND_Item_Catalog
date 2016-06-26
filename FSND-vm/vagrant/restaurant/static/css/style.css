@@ -1,14 +1,14 @@
 body {
 	font-family: sans-serif;
 	background-image: url('img3.jpg');
-	background-color: #333333;
+	background-color: #333;
 }
 
 h1,
 h2,
 h3,
 h4 {
-	color: #FFFFFF;
+	color: #fff;
 }
 
 h1,
@@ -28,13 +28,13 @@ h2 {
 p,
 dd,
 dt {
-	color: #CCCCCC;
+	color: #fff;
 }
 
 a {
 	text-decoration: none;
-	color:#FFFFCC;
-	font-size: .75em;
+	color: #ffffcc;
+	font-size: 0.75em;
 }
 
 .pane {
@@ -44,12 +44,12 @@ a {
     border-radius: 25px;
     padding: 5px;
     margin: 5px;
-    border-color: #999999;
-    background-color: #333333;
+    border-color: #999;
+    background-color: #333;
 }
 
 .header {
-	left:50%;
+	left: 50%;
 	text-align: center;
 }
 
@@ -64,7 +64,7 @@ a {
 }
 .price {
 	text-align: right;
-	width:50%;
+	width: 50%;
 	float: right;
 }
 
