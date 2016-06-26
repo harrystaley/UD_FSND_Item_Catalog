@@ -6,9 +6,13 @@
   <body>
     <h1>WHere would you like to eat?</h1>
     <br>
-    {% for restaurant in restaurants %}
-      <a href="/restaurant/{{restaurant.id}}/">{{restaurant.name}}</a>
-      <br>
-    {% endfor %}
+    {% if restaurants %}
+      {% for restaurant in restaurants %}
+        <a href="/restaurant/{{restaurant.id}}/">{{restaurant.name}}</a>
+        <br>
+      {% endfor %}
+    {% else %}
+      There are no restaurants why not create one.
+    {% endif %}
   </body>
 </html>

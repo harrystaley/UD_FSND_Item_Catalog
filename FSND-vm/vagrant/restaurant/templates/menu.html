@@ -23,19 +23,23 @@
     <br>
     <a href="{{url_for('NewMenuItem', restaurant_id=restaurant.id)}}">New Menu Item</a>
     <br>
-    {% for item in items %}
-      {{item.name}}
-      <br>
-      {{item.description}}
-      <br>
-      {{item.price}}
-      <br>
-      <a href="{{url_for('EditMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Edit</a>
-      <br>
-      <a href="{{url_for('DeleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Delete</a>
-      <br>
-      <br>
-      <br>
-    {% endfor %}
+    {% if items %}
+      {% for item in items %}
+        {{item.name}}
+        <br>
+        {{item.description}}
+        <br>
+        {{item.price}}
+        <br>
+        <a href="{{url_for('EditMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Edit</a>
+        <br>
+        <a href="{{url_for('DeleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Delete</a>
+        <br>
+        <br>
+        <br>
+      {% endfor %}
+    {% else %}
+      There are no menu items why not create one!
+    {% endif %}
   </body>
 </html>
