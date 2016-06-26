@@ -13,6 +13,12 @@
       <br>
       {{item.price}}
       <br>
+      <a href="{{url_for('EditMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Edit</a>
+      <br>
+      <a href="{{url_for('DeleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}">Delete</a>
+      <br>
+      <br>
+      <br>
     {% endfor %}
   </body>
 </html>
