@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify
 from sqlalchemy import create_engine
@@ -15,10 +16,17 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+# JSON REQUEST HANDLERS
+@app.route('/restaurants/JSON')
+def RestaurntsJSON(restaurant_id):
+    restaurants = session.query(Restaurant).filter_by(id=restaurant_id
+                                                      ).all()
+    return jsonify(RestData=[rest.serialize for rest in restaurants])
+
+
 @app.route('/restaurants/<int:restaurant_id>/JSON')
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
 def MenuJSON(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id
-                                                     ).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id
                                               ).all()
     return jsonify(MenuItems=[item.serialize for item in items])
@@ -31,6 +39,7 @@ def ItemJSON(restaurant_id, menu_id):
     return jsonify(MenuItem=item.serialize)
 
 
+# MAIN HANDLERS
 @app.route('/')
 def GetRestaurants():
     """
@@ -41,6 +50,7 @@ def GetRestaurants():
 
 
 @app.route('/restaurant/<int:restaurant_id>/')
+@app.route('/restaurant/<int:restaurant_id>/menu/')
 def GetMenu(restaurant_id):
     """ This method gets all of the menu items for the selected restaurant """
     restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
@@ -49,6 +59,51 @@ def GetMenu(restaurant_id):
                                               ).all()
     return render_template('menu.html', restaurant=restaurant,
                            items=items)
+
+
+@app.route('/restaurant/new/')
+def NewRestaurant():
+    """ method to add a new restaurant """
+    if request.method == 'POST':
+        newRestaurant = Restaurant(name=request.form['name'])
+        session.add(newRestaurant)
+        session.commit()
+        flash(str(newRestaurant.name) + " restaurant created.")
+        return redirect(url_for('GetRestaurants'))
+    else:
+        return render_template('newrestaurant.html')
+
+
+@app.route('/restaurant/<int:restaurant_id>/edit/')
+def EditRestaurant(restaurant_id):
+    """ method to edit a restaurant """
+    """ method to edit a menu item """
+    restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
+                                                     ).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            restaurant.name = request.form['name']
+            session.add(restaurant)
+            session.commit()
+            flash(str(restaurant.name) + " restaurant updated.")
+        return redirect(url_for('GetRestaurants'))
+    else:
+        return render_template('editrestaurant.html', restaurant=restaurant)
+
+
+@app.route('/restaurant/<int:restaurant_id>/delete/')
+def DeleteRestaurant(restaurant_id):
+    """ method to delete a restaurant """
+    """ method to delete the menu item """
+    restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
+                                                     ).one()
+    if request.method == 'POST':
+        session.delete(restaurant)
+        session.commit()
+        flash(str(restaurant.name) + " restaurant deleted.")
+        return redirect(url_for('GetRestaurants'))
+    else:
+        return render_template('deleterestaurant.html', restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/newitem', methods=['GET', 'POST'])
@@ -61,7 +116,7 @@ def NewMenuItem(restaurant_id):
                            restaurant_id=restaurant_id)
         session.add(newItem)
         session.commit()
-        flash("New item created.")
+        flash(str(newItem.name) + " menu item created.")
         return redirect(url_for('GetMenu', restaurant_id=restaurant_id))
     else:
         return render_template('newmenuitem.html', restaurant=restaurant)
@@ -81,14 +136,13 @@ def EditMenuItem(restaurant_id, menu_id):
             editItem.name = request.form['name']
             session.add(editItem)
             session.commit()
-            flash("Menu item modified.")
+            flash(str(item.name) + " updated.")
         return redirect(url_for('GetMenu', restaurant_id=restaurant_id))
     else:
         return render_template('editmenuitem.html', restaurant=restaurant,
                                item=item)
 
 
-# Task 3: Create a route for deleteMenuItem function here
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete',
            methods=['GET', 'POST'])
 def DeleteMenuItem(restaurant_id, menu_id):
