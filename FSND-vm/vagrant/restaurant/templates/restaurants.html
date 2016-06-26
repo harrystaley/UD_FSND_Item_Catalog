@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html>
-  <head>
+{% extends "base.html" %}
+
+  {% block title %}
     <title>Restaurant Menus</title>
-  </head>
-  <body>
+  {% endblock title %}
+  {% block content %}
     <h1>WHere would you like to eat?</h1>
     <br>
     {% if restaurants %}
@@ -14,5 +14,4 @@
     {% else %}
       There are no restaurants why not create one.
     {% endif %}
-  </body>
-</html>
+  {% endblock content %}

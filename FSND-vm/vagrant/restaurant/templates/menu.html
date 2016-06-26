@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
-    <title>{{restaurant.name}} Menu</title>
-  </head>
-  <body>
+{% extends "base.html" %}
+
+  {% block title %}
+    {{restaurant.name}} Menu
+  {% endblock title %}
+
+  {% block content %}
     <h1>{{restaurant.name}}</h1>
 
     {% with messages = get_flashed_messages() %}
@@ -41,5 +41,4 @@
     {% else %}
       There are no menu items why not create one!
     {% endif %}
-  </body>
-</html>
+  {% endblock content %}
