@@ -1,6 +1,8 @@
-
+import random
+import string
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify
+from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
@@ -48,6 +50,18 @@ def GetRestaurants():
     """
     restaurants = session.query(Restaurant).all()
     return render_template('restaurants.html', restaurants=restaurants)
+
+
+@app.route('/login/')
+def GetLogin():
+    """
+    Creates a state token and store it in a session for later retrieval to
+    guard against cross site forgerty.
+    """
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits
+                                  ) for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html')
 
 
 @app.route('/restaurant/<int:restaurant_id>/')

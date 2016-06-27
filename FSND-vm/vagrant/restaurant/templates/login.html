@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+  <h1>Login</h1>
+{% endblock title %}
+{% block content %}
+  <!-- GOOGLE PLUS SIGN IN BUTTON-->
+  <div id="signInButton">
+    <span class="g-signin"
+      data-scope="openid email"
+      data-clientid="69905935934-jk1278bfkdr33kgcrbmar78vikdcq340.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+  </div>
+{% endblock content %}
