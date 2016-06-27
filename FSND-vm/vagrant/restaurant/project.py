@@ -33,6 +33,7 @@ def MenuJSON(restaurant_id):
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
+@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 def ItemJSON(restaurant_id, menu_id):
     item = session.query(MenuItem).filter_by(id=menu_id
                                              ).one()
