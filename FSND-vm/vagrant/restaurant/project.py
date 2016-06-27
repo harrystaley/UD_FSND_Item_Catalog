@@ -172,7 +172,7 @@ def gdisconnect():
     """ handles the log out functions of the google acccount """
     # gets and displays the acccess token data in the console
     access_token = login_session['access_token']
-    print 'In gdisconnect access token is %s', access_token
+    print 'In gdisconnect access token is %s' % access_token
     print 'User name is: ' + login_session['username']
     if access_token is None:
         print 'Access Token is None'
