@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-  <h1>Login</h1>
+  Login
 {% endblock title %}
 {% block content %}
   <!-- GOOGLE PLUS SIGN IN BUTTON-->
@@ -22,7 +22,11 @@
       if (authResult['code']) {
         // Hide the sign-in button now that the user is authorized
         $('#signinButton').attr('style', 'display: none');
-        // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+        /**
+        * Send the one-time-use code to the server, if the server
+        * responds, write a 'login successful' message to the web
+        * page and then redirect back to the main restaurants page
+        */
         $.ajax({
           type: 'POST',
           url: '/gconnect?state={{STATE}}',
