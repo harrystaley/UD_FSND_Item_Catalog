@@ -17,23 +17,22 @@ session = DBSession()
 
 
 # JSON REQUEST HANDLERS
-@app.route('/restaurants/JSON')
-def RestaurntsJSON(restaurant_id):
-    restaurants = session.query(Restaurant).filter_by(id=restaurant_id
-                                                      ).all()
+@app.route('/restaurant/JSON')
+def RestaurntsJSON():
+    restaurants = session.query(Restaurant).all()
     return jsonify(RestData=[rest.serialize for rest in restaurants])
 
 
-@app.route('/restaurants/<int:restaurant_id>/JSON')
-@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+@app.route('/restaurant/<int:restaurant_id>/JSON')
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
 def MenuJSON(restaurant_id):
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id
                                               ).all()
     return jsonify(MenuItems=[item.serialize for item in items])
 
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
-@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 def ItemJSON(restaurant_id, menu_id):
     item = session.query(MenuItem).filter_by(id=menu_id
                                              ).one()

@@ -22,7 +22,7 @@ class Restaurant(Base):
     def serialize(self):
         return {
             'name': self.name,
-            'id': self.id,
+            'id': self.id
         }
 
 
