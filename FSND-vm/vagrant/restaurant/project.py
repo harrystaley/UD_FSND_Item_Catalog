@@ -1,7 +1,10 @@
+"""
+This module is the main project for P4 of the udacity FSND Item Catalog
+"""
 import random
 import string
-import httplib2
 import json
+import httplib2
 import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import jsonify, make_response
@@ -22,20 +25,20 @@ CLIENT_ID = json.loads(
 app = Flask(__name__)
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
+DB_SESSION = sessionmaker(bind=engine)
+session = DB_SESSION()
 
 
 # JSON REQUEST HANDLERS
 @app.route('/restaurant/JSON')
-def RestaurntsJSON():
+def restaurnts_json():
     restaurants = session.query(Restaurant).all()
     return jsonify(RestData=[rest.serialize for rest in restaurants])
 
 
 @app.route('/restaurant/<int:restaurant_id>/JSON')
 @app.route('/restaurant/<int:restaurant_id>/menu/JSON')
-def MenuJSON(restaurant_id):
+def menu_json(restaurant_id):
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id
                                               ).all()
     return jsonify(MenuItems=[item.serialize for item in items])
@@ -43,7 +46,7 @@ def MenuJSON(restaurant_id):
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
-def ItemJSON(restaurant_id, menu_id):
+def item_json(restaurant_id, menu_id):
     item = session.query(MenuItem).filter_by(id=menu_id
                                              ).one()
     return jsonify(MenuItem=item.serialize)
@@ -52,7 +55,7 @@ def ItemJSON(restaurant_id, menu_id):
 # MAIN HANDLERS
 @app.route('/')
 @app.route('/restaurant/')
-def GetRestaurants():
+def get_restaurants():
     """
     Get all of the restaurants in the database and display them in a web page.
     """
@@ -61,7 +64,7 @@ def GetRestaurants():
 
 
 @app.route('/login/')
-def GetLogin():
+def get_login():
     """
     Creates a state token and store it in a session for later retrieval to
     guard against cross site forgerty.
@@ -204,7 +207,7 @@ def gdisconnect():
 
 @app.route('/restaurant/<int:restaurant_id>/')
 @app.route('/restaurant/<int:restaurant_id>/menu/')
-def GetMenu(restaurant_id):
+def get_menu(restaurant_id):
     """ This method gets all of the menu items for the selected restaurant """
     restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                      ).one()
@@ -215,7 +218,7 @@ def GetMenu(restaurant_id):
 
 
 @app.route('/restaurant/new/', methods=['GET', 'POST'])
-def NewRestaurant():
+def new_restaurant():
     """ method to add a new restaurant """
     if 'username' not in login_session:
         return redirect('/login')
@@ -225,13 +228,13 @@ def NewRestaurant():
             session.add(newRestaurant)
             session.commit()
             flash(str(newRestaurant.name) + " restaurant created.")
-            return redirect(url_for('GetRestaurants'))
+            return redirect(url_for('get_restaurants'))
         else:
             return render_template('newrestaurant.html')
 
 
 @app.route('/restaurant/<int:restaurant_id>/edit/', methods=['GET', 'POST'])
-def EditRestaurant(restaurant_id):
+def edit_restaurant(restaurant_id):
     """ method to edit a restaurant """
     # if user is not logged in redirect to login page
     if 'username' not in login_session:
@@ -245,14 +248,14 @@ def EditRestaurant(restaurant_id):
                 session.add(restaurant)
                 session.commit()
                 flash(str(restaurant.name) + " restaurant updated.")
-            return redirect(url_for('GetRestaurants'))
+            return redirect(url_for('get_restaurants'))
         else:
             return render_template('editrestaurant.html',
                                    restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/delete/', methods=['GET', 'POST'])
-def DeleteRestaurant(restaurant_id):
+def delete_restaurant(restaurant_id):
     """ method to delete a restaurant """
     # if user is not logged in redirect to login page
     if 'username' not in login_session:
@@ -266,14 +269,14 @@ def DeleteRestaurant(restaurant_id):
             session.delete(restaurant, items)
             session.commit()
             flash(str(restaurant.name) + " restaurant deleted.")
-            return redirect(url_for('GetRestaurants'))
+            return redirect(url_for('get_restaurants'))
         else:
             return render_template('deleterestaurant.html',
                                    restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/newitem', methods=['GET', 'POST'])
-def NewMenuItem(restaurant_id):
+def new_menu_item(restaurant_id):
     """ method to add a new menu item to the menu """
     # if user is not logged in redirect to login page
     if 'username' not in login_session:
@@ -290,14 +293,14 @@ def NewMenuItem(restaurant_id):
             session.add(newItem)
             session.commit()
             flash(str(newItem.name) + " menu item created.")
-            return redirect(url_for('GetMenu', restaurant_id=restaurant_id))
+            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
         else:
             return render_template('newmenuitem.html', restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit',
            methods=['GET', 'POST'])
-def EditMenuItem(restaurant_id, menu_id):
+def edit_menu_item(restaurant_id, menu_id):
     """ method to edit a menu item """
     # if user is not logged in redirect to login page
     if 'username' not in login_session:
@@ -317,7 +320,7 @@ def EditMenuItem(restaurant_id, menu_id):
                 session.add(editItem)
                 session.commit()
                 flash(str(item.name) + " updated.")
-            return redirect(url_for('GetMenu', restaurant_id=restaurant_id))
+            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
         else:
             return render_template('editmenuitem.html', restaurant=restaurant,
                                    item=item)
@@ -325,7 +328,7 @@ def EditMenuItem(restaurant_id, menu_id):
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete',
            methods=['GET', 'POST'])
-def DeleteMenuItem(restaurant_id, menu_id):
+def delete_menu_item(restaurant_id, menu_id):
     """ method to delete the menu item """
     # if user is not logged in redirect to login page
     if 'username' not in login_session:
@@ -339,7 +342,7 @@ def DeleteMenuItem(restaurant_id, menu_id):
             session.delete(item)
             session.commit()
             flash("Menu item deleted.")
-            return redirect(url_for('GetMenu', restaurant_id=restaurant_id))
+            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
         else:
             return render_template('deletemenuitem.html',
                                    restaurant=restaurant,
