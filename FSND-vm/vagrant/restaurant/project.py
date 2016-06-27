@@ -41,6 +41,7 @@ def ItemJSON(restaurant_id, menu_id):
 
 # MAIN HANDLERS
 @app.route('/')
+@app.route('/restaurant/')
 def GetRestaurants():
     """
     Get all of the restaurants in the database and display them in a web page.
@@ -61,7 +62,7 @@ def GetMenu(restaurant_id):
                            items=items)
 
 
-@app.route('/restaurant/new/')
+@app.route('/restaurant/new/', methods=['GET', 'POST'])
 def NewRestaurant():
     """ method to add a new restaurant """
     if request.method == 'POST':
@@ -74,7 +75,7 @@ def NewRestaurant():
         return render_template('newrestaurant.html')
 
 
-@app.route('/restaurant/<int:restaurant_id>/edit/')
+@app.route('/restaurant/<int:restaurant_id>/edit/', methods=['GET', 'POST'])
 def EditRestaurant(restaurant_id):
     """ method to edit a restaurant """
     """ method to edit a menu item """
@@ -91,14 +92,16 @@ def EditRestaurant(restaurant_id):
         return render_template('editrestaurant.html', restaurant=restaurant)
 
 
-@app.route('/restaurant/<int:restaurant_id>/delete/')
+@app.route('/restaurant/<int:restaurant_id>/delete/', methods=['GET', 'POST'])
 def DeleteRestaurant(restaurant_id):
     """ method to delete a restaurant """
     """ method to delete the menu item """
     restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                      ).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id
+                                              ).all()
     if request.method == 'POST':
-        session.delete(restaurant)
+        session.delete(restaurant, items)
         session.commit()
         flash(str(restaurant.name) + " restaurant deleted.")
         return redirect(url_for('GetRestaurants'))

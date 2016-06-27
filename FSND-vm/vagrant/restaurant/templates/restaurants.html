@@ -6,9 +6,29 @@
   {% block content %}
     <h1>WHere would you like to eat?</h1>
     <br>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul class="flash">
+        {% for message in messages %}
+          <li>
+            <strong class="flash">{{message}}</strong>
+          </li>
+        {% endfor %}
+        </ul>
+
+      {% endif %}
+    {% endwith %}
+    <a href="{{url_for('NewRestaurant')}}">New Restaurant</a>
+    <br>
+    <br>
     {% if restaurants %}
       {% for restaurant in restaurants %}
         <a href="/restaurant/{{restaurant.id}}/">{{restaurant.name}}</a>
+        <br>
+        <a href="{{url_for('EditRestaurant', restaurant_id=restaurant.id)}}">Edit</a>
+        <a href="{{url_for('DeleteRestaurant', restaurant_id=restaurant.id)}}">Delete</a>
+        <br>
         <br>
       {% endfor %}
     {% else %}
