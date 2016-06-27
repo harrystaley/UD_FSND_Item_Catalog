@@ -8,7 +8,10 @@
   <h1>{{restaurant.name}} Menu - New Item</h1>
   <form action="{{url_for('NewMenuItem', restaurant_id=restaurant.id)}}" method="post">
     <p>Item Name:</p>
-    <input type="text" size="30" name="name">
+    <input type="text" size="80" name="name">
+    <input type="text" size="80" name="course">
+    <input type="text" size="80" name="description">
+    <input type="text" size="8" name="price">
     <input type="submit" value="Create">
   </form>
 {% endblock content %}

@@ -8,7 +8,10 @@
   <h1>{{restaurant.name}} Menu - Edit Item</h1>
   <form action="{{url_for('EditMenuItem', restaurant_id=restaurant.id, menu_id=item.id)}}" method="post">
     <p>Item Name:</p>
-    <input type="text" size="30" name="name" placeholder="{{item.name}}">
+    <input type="text" size="80" name="name" placeholder="{{item.name}}">
+    <input type="text" size="80" name="course" placeholder="{{item.course}}">
+    <input type="text" size="80" name="description" placeholder="{{item.description}}">
+    <input type="text" size="8" name="price" placeholder="{{item.price}}">
     <input type="submit" value="Create">
     <a href="{{url_for('GetMenu', restaurant_id=restaurant.id)}}">Cancel</a>
   </form>

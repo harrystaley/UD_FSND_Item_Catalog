@@ -116,6 +116,9 @@ def NewMenuItem(restaurant_id):
                                                      ).one()
     if request.method == 'POST':
         newItem = MenuItem(name=request.form['name'],
+                           course=request.form['course'],
+                           description=request.form['description'],
+                           price=request.form['price'],
                            restaurant_id=restaurant_id)
         session.add(newItem)
         session.commit()
@@ -137,6 +140,9 @@ def EditMenuItem(restaurant_id, menu_id):
         editItem = item
         if request.form['name']:
             editItem.name = request.form['name']
+            editItem.course = request.form['course']
+            editItem.description = request.form['description']
+            editItem.price = request.form['price']
             session.add(editItem)
             session.commit()
             flash(str(item.name) + " updated.")
