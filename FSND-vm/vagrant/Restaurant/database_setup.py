@@ -1,3 +1,4 @@
+""" This sets up the restaurant database """
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -10,13 +11,28 @@ Base = declarative_base()
 # place class defs between this and the end config code
 
 
+class User(Base):
+    """ Class defines the table for the restraunts in the database """
+    # defines the name of the table
+    __tablename__ = 'user'
+    # mapper variables for each of the atributes of a restraunt
+    name = Column(String(80), nullable=False)
+    email = Column(String(80), nullable=False)
+    picture = Column(String(80), nullable=False)
+    id = Column(Integer, primary_key=True)
+
+
 class Restaurant(Base):
     """ Class defines the table for the restraunts in the database """
     # defines the name of the table
     __tablename__ = 'restaurant'
+    # defines relationships with other tables
+    user = relationship(User)
+
     # mapper variables for each of the atributes of a restraunt
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):
@@ -32,7 +48,9 @@ class MenuItem(Base):
     """
     # defines the name of the table
     __tablename__ = 'menu_item'
+    # defines relationships with other tables
     restaurant = relationship(Restaurant)
+    user = relationship(User)
 
     # mapper variables for each of the atributes of a menu item
     name = Column(String(80), nullable=False)
@@ -41,6 +59,7 @@ class MenuItem(Base):
     description = Column(String(250))
     price = Column(String(8))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
 
     @property
     def serialize(self):
