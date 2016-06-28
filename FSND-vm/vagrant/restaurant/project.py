@@ -72,6 +72,7 @@ def get_login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits
                                   ) for x in xrange(32))
     login_session['state'] = state
+    print "LOGIN STATE: " + state
     return render_template('login.html', STATE=state)
 
 
@@ -79,7 +80,7 @@ def get_login():
 def gconnect():
     """ handles authentication and authorization for google authentication """
     # state token validation
-    if request.args.get('state') != login_session('state'):
+    if request.args.get('state') != login_session['state']:
         response = make_response(json.dumps('Invalid state parameter'
                                             ), 401)
         response.heeaders['content-type'] = 'application/json'
@@ -136,7 +137,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get google user data json
