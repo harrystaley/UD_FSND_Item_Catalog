@@ -150,7 +150,13 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
-
+    # if the user exists get their user id otherwise create new user
+    if get_user_id(data['email']):
+        user_id = get_user_id(data['email'])
+    else:
+        user_id = create_user(login_session)
+    # store the user id in the login session
+    login_session['user_id'] = user_id
     # display welcome message for user
     output = ''
     output += '<h1>Welcome, '
@@ -225,7 +231,8 @@ def new_restaurant():
         return redirect('/login')
     else:
         if request.method == 'POST':
-            newRestaurant = Restaurant(name=request.form['name'])
+            newRestaurant = Restaurant(name=request.form['name'],
+                                       user_id=login_session['user_id'])
             session.add(newRestaurant)
             session.commit()
             flash(str(newRestaurant.name) + " restaurant created.")
@@ -290,6 +297,7 @@ def new_menu_item(restaurant_id):
                                course=request.form['course'],
                                description=request.form['description'],
                                price=request.form['price'],
+                               user_id=restaurant.user_id,
                                restaurant_id=restaurant_id)
             session.add(newItem)
             session.commit()
@@ -348,6 +356,41 @@ def delete_menu_item(restaurant_id, menu_id):
             return render_template('deletemenuitem.html',
                                    restaurant=restaurant,
                                    item=item)
+
+
+def get_user_id(email):
+    """ queries the User table for user id based on user email """
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user.id
+    except:
+        return None
+
+
+def get_user_info(user_id):
+    """
+    queries the User table based on user id for the rest of the
+    user info such as email, picture, ect.
+    """
+    user = session.query(User).filter_by(user_id=user_id).one()
+    if user:
+        return user
+    else:
+        return None
+
+
+def create_user(login_session):
+    """
+    creates a new user and commits it to the database and then
+    once created returns the user id of the newly created user.
+    """
+    newUser = User(name=login_session['username'],
+                   email=login_session['email'],
+                   picture=login_session['picture'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user.id
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
