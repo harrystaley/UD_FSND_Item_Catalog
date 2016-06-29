@@ -60,7 +60,13 @@ def get_restaurants():
     Get all of the restaurants in the database and display them in a web page.
     """
     restaurants = session.query(Restaurant).all()
-    return render_template('restaurants.html', restaurants=restaurants)
+    # if the userid is in the login session pass it to the template.
+    try:
+        user_id = login_session['user_id']
+    except KeyError:
+        user_id = None
+    return render_template('restaurants.html', restaurants=restaurants,
+                           user_id=user_id)
 
 
 @app.route('/login/')
@@ -202,6 +208,7 @@ def gdisconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
+        del login_session['user_id']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -220,8 +227,13 @@ def get_menu(restaurant_id):
                                                      ).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id
                                               ).all()
+    # if the userid is in the login session pass it to the template.
+    try:
+        user_id = login_session['user_id']
+    except KeyError:
+        user_id = None
     return render_template('menu.html', restaurant=restaurant,
-                           items=items)
+                           items=items, user_id=user_id)
 
 
 @app.route('/restaurant/new/', methods=['GET', 'POST'])
@@ -250,16 +262,21 @@ def edit_restaurant(restaurant_id):
     else:
         restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                          ).one()
-        if request.method == 'POST':
-            if request.form['name']:
-                restaurant.name = request.form['name']
-                session.add(restaurant)
-                session.commit()
-                flash(str(restaurant.name) + " restaurant updated.")
-            return redirect(url_for('get_restaurants'))
+        # if the logged in user is the restaurant owner allow them to edit
+        if restaurant.user_id == login_session['user_id']:
+            if request.method == 'POST':
+                if request.form['name']:
+                    restaurant.name = request.form['name']
+                    session.add(restaurant)
+                    session.commit()
+                    flash(str(restaurant.name) + " restaurant updated.")
+                return redirect(url_for('get_restaurants'))
+            else:
+                return render_template('editrestaurant.html',
+                                       restaurant=restaurant)
         else:
-            return render_template('editrestaurant.html',
-                                   restaurant=restaurant)
+            flash("Athentication Error: you are not the owner.")
+            return redirect(url_for('get_restaurants'))
 
 
 @app.route('/restaurant/<int:restaurant_id>/delete/', methods=['GET', 'POST'])
@@ -271,16 +288,22 @@ def delete_restaurant(restaurant_id):
     else:
         restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                          ).one()
-        items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id
-                                                  ).all()
-        if request.method == 'POST':
-            session.delete(restaurant, items)
-            session.commit()
-            flash(str(restaurant.name) + " restaurant deleted.")
-            return redirect(url_for('get_restaurants'))
+        # if the logged in user is the restaurant owner allow them to delete
+        if restaurant.user_id == login_session['user_id']:
+            items = session.query(MenuItem
+                                  ).filter_by(restaurant_id=restaurant.id
+                                              ).all()
+            if request.method == 'POST':
+                session.delete(restaurant, items)
+                session.commit()
+                flash(str(restaurant.name) + " restaurant deleted.")
+                return redirect(url_for('get_restaurants'))
+            else:
+                return render_template('deleterestaurant.html',
+                                       restaurant=restaurant)
         else:
-            return render_template('deleterestaurant.html',
-                                   restaurant=restaurant)
+            flash("Athentication Error: you are not the owner.")
+            return redirect(url_for('get_restaurants'))
 
 
 @app.route('/restaurant/<int:restaurant_id>/newitem', methods=['GET', 'POST'])
@@ -292,19 +315,27 @@ def new_menu_item(restaurant_id):
     else:
         restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                          ).one()
-        if request.method == 'POST':
-            newItem = MenuItem(name=request.form['name'],
-                               course=request.form['course'],
-                               description=request.form['description'],
-                               price=request.form['price'],
-                               user_id=restaurant.user_id,
-                               restaurant_id=restaurant_id)
-            session.add(newItem)
-            session.commit()
-            flash(str(newItem.name) + " menu item created.")
-            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
+        # if the logged in user is the restaurant owner allow them to add items
+        if restaurant.user_id == login_session['user_id']:
+            if request.method == 'POST':
+                newItem = MenuItem(name=request.form['name'],
+                                   course=request.form['course'],
+                                   description=request.form['description'],
+                                   price=request.form['price'],
+                                   user_id=restaurant.user_id,
+                                   restaurant_id=restaurant_id)
+                session.add(newItem)
+                session.commit()
+                flash(str(newItem.name) + " menu item created.")
+                return redirect(url_for('get_menu',
+                                        restaurant_id=restaurant_id))
+            else:
+                return render_template('newmenuitem.html',
+                                       restaurant=restaurant)
         else:
-            return render_template('newmenuitem.html', restaurant=restaurant)
+            flash("Athentication Error: you are not the owner.")
+            return redirect(url_for('get_manu',
+                                    restaurant_id=restaurant_id))
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/edit',
@@ -317,22 +348,30 @@ def edit_menu_item(restaurant_id, menu_id):
     else:
         restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                          ).one()
-        item = session.query(MenuItem).filter_by(id=int(menu_id)
-                                                 ).one()
-        if request.method == 'POST':
-            editItem = item
-            if request.form['name']:
-                editItem.name = request.form['name']
-                editItem.course = request.form['course']
-                editItem.description = request.form['description']
-                editItem.price = request.form['price']
-                session.add(editItem)
-                session.commit()
-                flash(str(item.name) + " updated.")
-            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
+        # if the logged in user is the restaurant owner allow them to edit
+        if restaurant.user_id == login_session['user_id']:
+            item = session.query(MenuItem).filter_by(id=int(menu_id)
+                                                     ).one()
+            if request.method == 'POST':
+                editItem = item
+                if request.form['name']:
+                    editItem.name = request.form['name']
+                    editItem.course = request.form['course']
+                    editItem.description = request.form['description']
+                    editItem.price = request.form['price']
+                    session.add(editItem)
+                    session.commit()
+                    flash(str(item.name) + " updated.")
+                return redirect(url_for('get_menu',
+                                        restaurant_id=restaurant_id))
+            else:
+                return render_template('editmenuitem.html',
+                                       restaurant=restaurant,
+                                       item=item)
         else:
-            return render_template('editmenuitem.html', restaurant=restaurant,
-                                   item=item)
+            flash("Athentication Error: you are not the owner.")
+            return redirect(url_for('get_manu',
+                                    restaurant_id=restaurant_id))
 
 
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/delete',
@@ -345,17 +384,24 @@ def delete_menu_item(restaurant_id, menu_id):
     else:
         restaurant = session.query(Restaurant).filter_by(id=int(restaurant_id)
                                                          ).one()
-        item = session.query(MenuItem).filter_by(id=int(menu_id)
-                                                 ).one()
-        if request.method == 'POST':
-            session.delete(item)
-            session.commit()
-            flash("Menu item deleted.")
-            return redirect(url_for('get_menu', restaurant_id=restaurant_id))
+        # if the logged in user is the restaurant owner allow item deletion
+        if restaurant.user_id == login_session['user_id']:
+            item = session.query(MenuItem).filter_by(id=int(menu_id)
+                                                     ).one()
+            if request.method == 'POST':
+                session.delete(item)
+                session.commit()
+                flash("Menu item deleted.")
+                return redirect(url_for('get_menu',
+                                        restaurant_id=restaurant_id))
+            else:
+                return render_template('deletemenuitem.html',
+                                       restaurant=restaurant,
+                                       item=item)
         else:
-            return render_template('deletemenuitem.html',
-                                   restaurant=restaurant,
-                                   item=item)
+            flash("Athentication Error: you are not the owner.")
+            return redirect(url_for('get_manu',
+                                    restaurant_id=restaurant_id))
 
 
 def get_user_id(email):
