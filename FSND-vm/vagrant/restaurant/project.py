@@ -11,7 +11,7 @@ from flask import jsonify, make_response
 from flask import session as login_session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
