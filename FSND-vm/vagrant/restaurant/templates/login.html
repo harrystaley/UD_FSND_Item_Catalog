@@ -2,7 +2,11 @@
 {% block title %}
   Login
 {% endblock title %}
+
 {% block content %}
+  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="//apis.google.com/js/platform.js?onload=start"> </script>
   <!-- GOOGLE PLUS SIGN IN BUTTON -->
   <div id="signInButton">
     <span class="g-signin"
@@ -54,11 +58,6 @@
   <!-- END GOOGLE PLUS SIGN IN -->
 
   <!-- FACEBOOK SIGN IN BUTTON -->
-  <button>
-    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
-      <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
-    </fb:login-button>
-  </button>
 
   <script>
   // FACEBOOK SIGN IN FUNCTIONS
@@ -67,7 +66,7 @@
         appId      : '267525440273596',
         cookie     : true,  // enable cookies to allow the server to access the session
         xfbml      : true,  // parse social plugins on this page
-        version    : 'v2.2' // use version 2.2
+        version    : 'v2.4' // use version 2.4
       });
     };
     // Load the SDK asynchronously
@@ -108,6 +107,13 @@
       });
     }
   </script>
+
+  <button>
+    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+      <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+    </fb:login-button>
+  </button>
+
 <!-- END FACEBOOK SIGN IN -->
 
 {% endblock content %}
