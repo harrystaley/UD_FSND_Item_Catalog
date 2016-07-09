@@ -32,6 +32,7 @@ session = DB_SESSION()
 # JSON REQUEST HANDLERS
 @app.route('/restaurant/JSON')
 def restaurnts_json():
+    """ handler to provide a list of restaurants in the form of a json """
     restaurants = session.query(Restaurant).all()
     return jsonify(RestData=[rest.serialize for rest in restaurants])
 
@@ -39,6 +40,7 @@ def restaurnts_json():
 @app.route('/restaurant/<int:restaurant_id>/JSON')
 @app.route('/restaurant/<int:restaurant_id>/menu/JSON')
 def menu_json(restaurant_id):
+    """ handler to provide a json for the list of items on a menu. """
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id
                                               ).all()
     return jsonify(MenuItems=[item.serialize for item in items])
@@ -47,6 +49,7 @@ def menu_json(restaurant_id):
 @app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
 def item_json(restaurant_id, menu_id):
+    """ handler to provide json for an individual item """
     item = session.query(MenuItem).filter_by(id=menu_id
                                              ).one()
     return jsonify(MenuItem=item.serialize)
@@ -408,7 +411,7 @@ def delete_restaurant(restaurant_id):
                                   ).filter_by(restaurant_id=restaurant.id
                                               ).all()
             if request.method == 'POST':
-                session.delete(restaurant, items)
+                session.delete(restaurant)
                 session.commit()
                 flash(str(restaurant.name) + " restaurant deleted.")
                 return redirect(url_for('get_restaurants'))

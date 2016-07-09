@@ -7,11 +7,28 @@
   {% block content %}
   <h1>{{restaurant.name}} Menu - New Item</h1>
   <form action="{{url_for('new_menu_item', restaurant_id=restaurant.id)}}" method="post">
-    <p>Item Name:</p>
-    <input type="text" size="80" name="name">
-    <input type="text" size="80" name="course">
-    <input type="text" size="80" name="description">
-    <input type="text" size="8" name="price">
+    <fieldset>
+    <div>
+      <label for="name"> Name:</label>
+      <input type="text" size="80" name="name" placeholder="name">
+    </div>
+    <div>
+      <label for="course">Course:</label>
+      <select name="course">
+        <option value="Appetizer">Appetizer</option>
+        <option value="Entree">Entree</option>
+        <option value="Dessert">Dessert</option>
+      </select>
+    </div>
+    <div>
+      <label for="description">Description:</label>
+      <input type="text" size="80" name="description" placeholder="description">
+    </div>
+    <div>
+      <label for="price">Price:</label>
+      <input type="text" size="8" name="price" placeholder="price">
+    </div>
     <input type="submit" value="Create">
+    </fieldset>
   </form>
 {% endblock content %}

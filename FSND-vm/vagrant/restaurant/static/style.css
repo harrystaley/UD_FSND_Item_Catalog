@@ -22,6 +22,7 @@ h3 {
 	color: #4A4A4A;
 	line-height: 23px;
 }
+
  p {
  	font-family: "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif;
  	font-size: 16px;
@@ -41,18 +42,23 @@ h3 {
  	color: #0093B9;
  	line-height: 17px;
  }
+
 .padding-top {
 	padding-top: 30px;
 }
+
 .padding-bottom {
 	padding-bottom: 30px;
 }
+
 .margin-right {
 	margin-right: 30px;
 }
+
 .padding-none {
 	padding: 0;
 }
+
 .btn {
 	padding: 20px;
 	margin: 0;
@@ -60,28 +66,35 @@ h3 {
 	border-width: 2px;
 	color: #9FB80A;;
 }
+
 .btn:hover {
 	border-color: #9FB80A;
 }
+
 .btn.delete {
 	border-color: #aaaaaa;
 	color: #aaaaaa;
 }
+
 .btn.delete:hover {
 	border-color: #aaaaaa;
 	color: red;
 }
+
 .glyphicon {
 	margin-right: 10px;
 }
+
 .top-menu {
 	padding-top: 30px;
 	padding-bottom: 30px;
 }
+
 .top-menu p {
 	margin-bottom: 0;
 	line-height: 16px;
 }
+
 .top-menu a {
 	margin-bottom: 0;
 	line-height: 16px;
@@ -89,15 +102,19 @@ h3 {
 	color: #7B7573;
 	font-weight: 400;
 }
+
 .divider {
 	height: 15px;
 }
+
 .divider.blue {
 	background-color: #42C3C9;
 }
+
 .divider.green {
 	background-color: #9FB80A;
 }
+
 .banner.main {
 	height: 150px;
 	background: url("/static/top-banner.jpg");
@@ -105,25 +122,31 @@ h3 {
 	background-repeat: no-repeat;
 	background-size: cover;
 }
+
 .banner.menu {
 	height: 150px;
 	background-color: #E1E17F;
 }
+
 .banner.profile {
 	height: 150px;
 	background-color: #A6E8EB;
 }
+
 .banner h1 {
 	margin: 45px 0;
 }
+
  .restaurant-list {
  	background-color: #F0F0F0;
  	padding: 20px;
-u }
+}
+
  .restaurant-list:hover {
  	background-color: #e1e17f;
  	padding: 20px;
 }
+
 .menu-item {
 	background: #F0F0F0;
 	padding: 20px;
