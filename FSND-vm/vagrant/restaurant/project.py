@@ -1,6 +1,7 @@
 """
 This module is the main project for P4 of the udacity FSND Item Catalog
 """
+import os
 import random
 import string
 import json
@@ -14,6 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from werkzeug.utils import secure_filename
 
 
 __author__ = "Harry Staley <staleyh@gmail.com>"
@@ -27,6 +29,31 @@ engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
 DB_SESSION = sessionmaker(bind=engine)
 session = DB_SESSION()
+
+# IMAGE HANDLING
+# This is the path to the upload directory
+app.config['UPLOAD_FOLDER'] = 'static/images/'
+# These are the extension that we are accepting to be uploaded
+app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
+
+
+# For a given file, return whether it's an allowed type or not
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+# Route that will process the file upload
+@app.route('/upload', methods=['POST'])
+
+# This route is expecting a parameter containing the name
+# of a file. Then it will locate that file on the upload
+# directory and show it on the browser, so if the user uploads
+# an image, that image is going to be show after the upload
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 
 # JSON REQUEST HANDLERS
@@ -361,6 +388,11 @@ def new_restaurant():
     else:
         if request.method == 'POST':
             newRestaurant = Restaurant(name=request.form['name'],
+                                       address=request.form['address'],
+                                       city=request.form['city'],
+                                       state=request.form['state'],
+                                       zip_code=request.form['zip_code'],
+                                       phone=request.form['phone'],
                                        user_id=login_session['user_id'])
             session.add(newRestaurant)
             session.commit()
@@ -384,6 +416,11 @@ def edit_restaurant(restaurant_id):
             if request.method == 'POST':
                 if request.form['name']:
                     restaurant.name = request.form['name']
+                    restaurant.address = rresequest.form['address']
+                    restaurant.city = request.form['city']
+                    restaurant.state = request.form['state']
+                    restaurant.zip_code = request.form['zip_code']
+                    restaurant.phone = request.form['phone']
                     session.add(restaurant)
                     session.commit()
                     flash(str(restaurant.name) + " restaurant updated.")

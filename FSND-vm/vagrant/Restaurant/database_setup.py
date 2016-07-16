@@ -31,6 +31,11 @@ class Restaurant(Base):
 
     # mapper variables for each of the atributes of a restraunt
     name = Column(String(80), nullable=False)
+    address = Column(String(80), nullable=False)
+    city = Column(String(80), nullable=False)
+    state = Column(String(2), nullable=False)
+    zip_code = Column(String(5), nullable=False)
+    phone = Column(String(12), nullable=False)
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
 

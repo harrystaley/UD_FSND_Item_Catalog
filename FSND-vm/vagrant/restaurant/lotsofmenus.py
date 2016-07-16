@@ -26,38 +26,64 @@ session.add(User1)
 session.commit()
 
 # Menu for UrbanBurger
-restaurant1 = Restaurant(user_id=1, name="Urban Burger")
+restaurant1 = Restaurant(user_id=1,
+                         name="Urban Burger",
+                         address="1900 Blanco Rd",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78212",
+                         phone="555-212-1234")
 
 session.add(restaurant1)
 session.commit()
 
-menuItem2 = MenuItem(user_id=1, name="Veggie Burger", description="Juicy grilled veggie patty with tomato mayo and lettuce",
-                     price="$7.50", course="Entree", restaurant=restaurant1)
+menuItem2 = MenuItem(user_id=1,
+                     name="Veggie Burger",
+                     description="Juicy grilled veggie patty with tomato mayo and lettuce",
+                     price="$7.50",
+                     course="Entree",
+                     restaurant=restaurant1)
 
 session.add(menuItem2)
 session.commit()
 
 
-menuItem1 = MenuItem(user_id=1, name="French Fries", description="with garlic and parmesan",
-                     price="$2.99", course="Appetizer", restaurant=restaurant1)
+menuItem1 = MenuItem(user_id=1,
+                     name="French Fries",
+                     description="with garlic and parmesan",
+                     price="$2.99",
+                     course="Appetizer",
+                     restaurant=restaurant1)
 
 session.add(menuItem1)
 session.commit()
 
-menuItem2 = MenuItem(user_id=1, name="Chicken Burger", description="Juicy grilled chicken patty with tomato mayo and lettuce",
-                     price="$5.50", course="Entree", restaurant=restaurant1)
+menuItem2 = MenuItem(user_id=1,
+                     name="Chicken Burger",
+                     description="Juicy grilled chicken patty with tomato mayo and lettuce",
+                     price="$5.50",
+                     course="Entree",
+                     restaurant=restaurant1)
 
 session.add(menuItem2)
 session.commit()
 
-menuItem3 = MenuItem(user_id=1, name="Chocolate Cake", description="fresh baked and served with ice cream",
-                     price="$3.99", course="Dessert", restaurant=restaurant1)
+menuItem3 = MenuItem(user_id=1,
+                     name="Chocolate Cake",
+                     description="fresh baked and served with ice cream",
+                     price="$3.99",
+                     course="Dessert",
+                     restaurant=restaurant1)
 
 session.add(menuItem3)
 session.commit()
 
-menuItem4 = MenuItem(user_id=1, name="Sirloin Burger", description="Made with grade A beef",
-                     price="$7.99", course="Entree", restaurant=restaurant1)
+menuItem4 = MenuItem(user_id=1,
+                     name="Sirloin Burger",
+                     description="Made with grade A beef",
+                     price="$7.99",
+                     course="Entree",
+                     restaurant=restaurant1)
 
 session.add(menuItem4)
 session.commit()
@@ -88,7 +114,13 @@ session.commit()
 
 
 # Menu for Super Stir Fry
-restaurant2 = Restaurant(user_id=1, name="Super Stir Fry")
+restaurant2 = Restaurant(user_id=1,
+                         name="Super Stir Fry",
+                         address="1234 Stir Fry St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant2)
 session.commit()
@@ -132,7 +164,13 @@ session.commit()
 
 
 # Menu for Panda Garden
-restaurant1 = Restaurant(user_id=1, name="Panda Garden")
+restaurant1 = Restaurant(user_id=1,
+                         name="Panda Garden",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -170,7 +208,13 @@ session.commit()
 
 
 # Menu for Thyme for that
-restaurant1 = Restaurant(user_id=1, name="Thyme for That Vegetarian Cuisine ")
+restaurant1 = Restaurant(user_id=1,
+                         name="Thyme for That Vegetarian Cuisine ",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -214,7 +258,13 @@ session.commit()
 
 
 # Menu for Tony's Bistro
-restaurant1 = Restaurant(user_id=1, name="Tony\'s Bistro ")
+restaurant1 = Restaurant(user_id=1,
+                         name="Tony\'s Bistro ",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -252,7 +302,13 @@ session.commit()
 
 
 # Menu for Andala's
-restaurant1 = Restaurant(user_id=1, name="Andala\'s")
+restaurant1 = Restaurant(user_id=1,
+                         name="Andala\'s",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -290,7 +346,13 @@ session.commit()
 
 
 # Menu for Auntie Ann's
-restaurant1 = Restaurant(user_id=1, name="Auntie Ann\'s Diner' ")
+restaurant1 = Restaurant(user_id=1,
+                         name="Auntie Ann\'s Diner' ",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -340,7 +402,13 @@ session.commit()
 
 
 # Menu for Cocina Y Amor
-restaurant1 = Restaurant(user_id=1, name="Cocina Y Amor ")
+restaurant1 = Restaurant(user_id=1,
+                         name="Cocina Y Amor",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
 
 session.add(restaurant1)
 session.commit()
@@ -359,7 +427,14 @@ session.add(menuItem2)
 session.commit()
 
 
-restaurant1 = Restaurant(user_id=1, name="State Bird Provisions")
+restaurant1 = Restaurant(user_id=1,
+                         name="State Bird Provisions",
+                         address="1234 Burger St.",
+                         city="San Antonio",
+                         state="TX",
+                         zip_code="78109",
+                         phone="330-718-1876")
+
 session.add(restaurant1)
 session.commit()
 

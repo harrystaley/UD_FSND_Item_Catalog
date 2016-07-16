@@ -6,6 +6,11 @@
 
   {% block content %}
     <h1 class="header">{{restaurant.name}} Menu</h1>
+    <div>
+      {{restaurant.address}} <br>
+      {{restaurant.city}}, {{restaurant.state}} {{restaurant.zip_code}} <br>
+      {{restaurant.phone}}
+    </div>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
