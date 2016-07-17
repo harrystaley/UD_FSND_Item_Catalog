@@ -5,7 +5,7 @@
   {% endblock title %}
 
   {% block content %}
-    <h1>WHere would you like to eat?</h1>
+    <h1>Where would you like to eat?</h1>
     <br>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -34,8 +34,8 @@
         <a class="menu_item" href="/restaurant/{{restaurant.id}}/">{{restaurant.name}}</a>
         <br>
         {% if restaurant.user_id == user_id %}
-          <a href="{{url_for('edit_restaurant', restaurant_id=restaurant.id)}}">Edit</a>
-          <a href="{{url_for('delete_restaurant', restaurant_id=restaurant.id)}}">Delete</a>
+          <a class="btn" href="{{url_for('edit_restaurant', restaurant_id=restaurant.id)}}">Edit</a>
+          <a class="btn" href="{{url_for('delete_restaurant', restaurant_id=restaurant.id)}}">Delete</a>
         {% endif %}
       </div>
       {% if loop.index is divisibleby 4 %}

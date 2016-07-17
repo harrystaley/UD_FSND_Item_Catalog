@@ -1,7 +1,7 @@
 body {
 	font-family: sans-serif;
-	background-image: url('img3.jpg');
 	background-color: #333;
+	background-image: url("Soup_Banner.jpg");
 }
 
 h1,
@@ -35,6 +35,10 @@ a {
 	text-decoration: none;
 	color: #ffffcc;
 	font-size: 0.75em;
+}
+
+.top-menu{
+
 }
 
 .pane {

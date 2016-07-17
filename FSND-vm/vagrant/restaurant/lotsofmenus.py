@@ -39,6 +39,8 @@ session.commit()
 
 menuItem2 = MenuItem(user_id=1,
                      name="Veggie Burger",
+                     picture_url="https://placekitten.com/200/300?image=1",
+                     alt_text="This is a placeholder that shows kittens",
                      description="Juicy grilled veggie patty with tomato mayo and lettuce",
                      price="$7.50",
                      course="Entree",
@@ -50,6 +52,8 @@ session.commit()
 
 menuItem1 = MenuItem(user_id=1,
                      name="French Fries",
+                     picture_url="https://placekitten.com/200/300?image=2",
+                     alt_text="This is a placeholder that shows kittens",
                      description="with garlic and parmesan",
                      price="$2.99",
                      course="Appetizer",
@@ -60,6 +64,8 @@ session.commit()
 
 menuItem2 = MenuItem(user_id=1,
                      name="Chicken Burger",
+                     picture_url="https://placekitten.com/200/300?image=3",
+                     alt_text="This is a placeholder that shows kittens",
                      description="Juicy grilled chicken patty with tomato mayo and lettuce",
                      price="$5.50",
                      course="Entree",
@@ -70,6 +76,8 @@ session.commit()
 
 menuItem3 = MenuItem(user_id=1,
                      name="Chocolate Cake",
+                     picture_url="https://placekitten.com/200/300?image=4",
+                     alt_text="This is a placeholder that shows kittens",
                      description="fresh baked and served with ice cream",
                      price="$3.99",
                      course="Dessert",
@@ -80,6 +88,8 @@ session.commit()
 
 menuItem4 = MenuItem(user_id=1,
                      name="Sirloin Burger",
+                     picture_url="https://placekitten.com/200/300?image=5",
+                     alt_text="This is a placeholder that shows kittens",
                      description="Made with grade A beef",
                      price="$7.99",
                      course="Entree",
@@ -88,26 +98,50 @@ menuItem4 = MenuItem(user_id=1,
 session.add(menuItem4)
 session.commit()
 
-menuItem5 = MenuItem(user_id=1, name="Root Beer", description="16oz of refreshing goodness",
-                     price="$1.99", course="Beverage", restaurant=restaurant1)
+menuItem5 = MenuItem(user_id=1,
+                     name="Root Beer",
+                     picture_url="https://placekitten.com/200/300?image=6",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="16oz of refreshing goodness",
+                     price="$1.99",
+                     course="Beverage",
+                     restaurant=restaurant1)
 
 session.add(menuItem5)
 session.commit()
 
-menuItem6 = MenuItem(user_id=1, name="Iced Tea", description="with Lemon",
-                     price="$.99", course="Beverage", restaurant=restaurant1)
+menuItem6 = MenuItem(user_id=1,
+                     name="Iced Tea",
+                     picture_url="https://placekitten.com/200/300?image=7",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="with Lemon",
+                     price="$.99",
+                     course="Beverage",
+                     restaurant=restaurant1)
 
 session.add(menuItem6)
 session.commit()
 
-menuItem7 = MenuItem(user_id=1, name="Grilled Cheese Sandwich",
-                     description="On texas toast with American Cheese", price="$3.49", course="Entree", restaurant=restaurant1)
+menuItem7 = MenuItem(user_id=1,
+                     name="Grilled Cheese Sandwich",
+                     picture_url="https://placekitten.com/200/300?image=8",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="On texas toast with American Cheese",
+                     price="$3.49",
+                     course="Entree",
+                     restaurant=restaurant1)
 
 session.add(menuItem7)
 session.commit()
 
-menuItem8 = MenuItem(user_id=1, name="Veggie Burger", description="Made with freshest of ingredients and home grown spices",
-                     price="$5.99", course="Entree", restaurant=restaurant1)
+menuItem8 = MenuItem(user_id=1,
+                     name="Veggie Burger",
+                     picture_url="https://placekitten.com/200/300?image=9",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="Made with freshest of ingredients and home grown spices",
+                     price="$5.99",
+                     course="Entree",
+                     restaurant=restaurant1)
 
 session.add(menuItem8)
 session.commit()
@@ -126,38 +160,74 @@ session.add(restaurant2)
 session.commit()
 
 
-menuItem1 = MenuItem(user_id=1, name="Chicken Stir Fry", description="With your choice of noodles vegetables and sauces",
-                     price="$7.99", course="Entree", restaurant=restaurant2)
+menuItem1 = MenuItem(user_id=1,
+                     name="Chicken Stir Fry",
+                     picture_url="https://placekitten.com/200/300?image=1",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="With your choice of noodles vegetables and sauces",
+                     price="$7.99",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem1)
 session.commit()
 
-menuItem2 = MenuItem(user_id=1, name="Peking Duck",
-                     description=" A famous duck dish from Beijing[1] that has been prepared since the imperial era. The meat is prized for its thin, crisp skin, with authentic versions of the dish serving mostly the skin and little meat, sliced in front of the diners by the cook", price="$25", course="Entree", restaurant=restaurant2)
+menuItem2 = MenuItem(user_id=1,
+                     name="Peking Duck",
+                     picture_url="https://placekitten.com/200/300?image=2",
+                     alt_text="This is a placeholder that shows kittens",
+                     description=" A famous duck dish from Beijing[1] that has been prepared since the imperial era. The meat is prized for its thin, crisp skin, with authentic versions of the dish serving mostly the skin and little meat, sliced in front of the diners by the cook",
+                     price="$25",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem2)
 session.commit()
 
-menuItem3 = MenuItem(user_id=1, name="Spicy Tuna Roll", description="Seared rare ahi, avocado, edamame, cucumber with wasabi soy sauce ",
-                     price="15", course="Entree", restaurant=restaurant2)
+menuItem3 = MenuItem(user_id=1,
+                     name="Spicy Tuna Roll",
+                     picture_url="https://placekitten.com/200/300?image=3",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="Seared rare ahi, avocado, edamame, cucumber with wasabi soy sauce ",
+                     price="15",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem3)
 session.commit()
 
-menuItem4 = MenuItem(user_id=1, name="Nepali Momo ", description="Steamed dumplings made with vegetables, spices and meat. ",
-                     price="12", course="Entree", restaurant=restaurant2)
+menuItem4 = MenuItem(user_id=1,
+                     name="Nepali Momo ",
+                     picture_url="https://placekitten.com/200/300?image=4",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="Steamed dumplings made with vegetables, spices and meat. ",
+                     price="12",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem4)
 session.commit()
 
-menuItem5 = MenuItem(user_id=1, name="Beef Noodle Soup", description="A Chinese noodle soup made of stewed or red braised beef, beef broth, vegetables and Chinese noodles.",
-                     price="14", course="Entree", restaurant=restaurant2)
+menuItem5 = MenuItem(user_id=1,
+                     name="Beef Noodle Soup",
+                     picture_url="https://placekitten.com/200/300?image=5",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="A Chinese noodle soup made of stewed or red braised beef, beef broth, vegetables and Chinese noodles.",
+                     price="14",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem5)
 session.commit()
 
-menuItem6 = MenuItem(user_id=1, name="Ramen", description="a Japanese noodle soup dish. It consists of Chinese-style wheat noodles served in a meat- or (occasionally) fish-based broth, often flavored with soy sauce or miso, and uses toppings such as sliced pork, dried seaweed, kamaboko, and green onions.",
-                     price="12", course="Entree", restaurant=restaurant2)
+menuItem6 = MenuItem(user_id=1,
+                     name="Ramen",
+                     picture_url="https://placekitten.com/200/300?image=6",
+                     alt_text="This is a placeholder that shows kittens",
+                     description="a Japanese noodle soup dish. It consists of Chinese-style wheat noodles served in a meat- or (occasionally) fish-based broth, often flavored with soy sauce or miso, and uses toppings such as sliced pork, dried seaweed, kamaboko, and green onions.",
+                     price="12",
+                     course="Entree",
+                     restaurant=restaurant2)
 
 session.add(menuItem6)
 session.commit()

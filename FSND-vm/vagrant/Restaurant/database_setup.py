@@ -61,6 +61,8 @@ class MenuItem(Base):
     name = Column(String(80), nullable=False)
     id = Column(Integer, primary_key=True)
     course = Column(String(250))
+    picture_url = Column(String(250))
+    alt_text = Column(String(250))
     description = Column(String(250))
     price = Column(String(8))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
@@ -73,7 +75,10 @@ class MenuItem(Base):
             'description': self.description,
             'id': self.id,
             'price': self.price,
-            'course': self.course
+            'course': self.course,
+            'picture_url': self.picture_url,
+            'alt_text': self.alt_text,
+            'alt_text': self.alt_text
         }
 
 

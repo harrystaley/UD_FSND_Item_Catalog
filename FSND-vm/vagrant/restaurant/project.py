@@ -21,7 +21,8 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import func
 from sqlalchemy.sql import label
 
-
+# TODO: add image uploads to the web page to add addtional
+# funcitonality to the site
 
 __author__ = "Harry Staley <staleyh@gmail.com>"
 __version__ = "1.0"
@@ -35,9 +36,9 @@ Base.metadata.bind = engine
 DB_SESSION = sessionmaker(bind=engine)
 session = DB_SESSION()
 
-# IMAGE HANDLING
+# IMAGE UPLOAD HANDLING
 # This is the path to the upload directory
-app.config['UPLOAD_FOLDER'] = 'static/images/'
+app.config['UPLOAD_FOLDER'] = '/static/images/'
 # These are the extension that we are accepting to be uploaded
 app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -49,59 +50,58 @@ def allowed_file(filename):
 
 
 # Route that will process the file upload
-@app.route('/upload', methods=['POST'])
+# @app.route('/upload', methods=['POST'])
 
 # This route is expecting a parameter containing the name
 # of a file. Then it will locate that file on the upload
 # directory and show it on the browser, so if the user uploads
 # an image, that image is going to be show after the upload
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+# @app.route('/uploads/<filename>')
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                                filename)
 
 
 # DATA VIZUALIZATIONS
-def getCourseJson():
-    """ gets the course data and pushes it into a json """
-    courses = session.query(label('name', MenuItem.course), label('count', func.count(MenuItem.course))).group_by(MenuItem.course).all()
-    return jsonify(courses=courses)
-
-
-def getPriceData():
-    price_data = []
-
-
 @app.route('/dashboard')
 def dashboard():
     """ gets the json data and renders the dashboard """
-    courses = session.query(label('name', MenuItem.course), label('count', func.count(MenuItem.course))).group_by(MenuItem.course).all()
     labels = []
-    for course in session.query(label('name', MenuItem.course)).group_by(MenuItem.course).all():
+    for course in session.query(label('name', MenuItem.course)
+                                ).group_by(MenuItem.course).all():
         labels.append(str(course.name))
     print labels
     values = []
-    for course in session.query(label('value', func.count(MenuItem.course))).group_by(MenuItem.course).all():
+    for course in session.query(label('value', func.count(MenuItem.course))
+                                ).group_by(MenuItem.course).all():
         values.append(course.value)
     print values
     return render_template('dashboard.html', labels=labels, values=values)
 
 
 # JSON REQUEST HANDLERS
-@app.route('/dashboard/JSON')
-def dashboard_json():
-    return getCourseJson()
+@app.route('/dashboard/JSON/')
+@app.route('/dashboard/json/')
+def course_json():
+    """ gets the course data for bar chart and pushes it into a json """
+    courses = session.query(label('name', MenuItem.course),
+                            label('count', func.count(MenuItem.course))
+                            ).group_by(MenuItem.course).all()
+    return jsonify(courses=courses)
 
 
-@app.route('/restaurant/JSON')
+@app.route('/restaurant/JSON/')
+@app.route('/restaurant/json/')
 def restaurnts_json():
     """ handler to provide a list of restaurants in the form of a json """
     restaurants = session.query(Restaurant).all()
     return jsonify(RestData=[rest.serialize for rest in restaurants])
 
 
-@app.route('/restaurant/<int:restaurant_id>/JSON')
-@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+@app.route('/restaurant/<int:restaurant_id>/JSON/')
+@app.route('/restaurant/<int:restaurant_id>/json/')
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON/')
+@app.route('/restaurant/<int:restaurant_id>/menu/json/')
 def menu_json(restaurant_id):
     """ handler to provide a json for the list of items on a menu. """
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id
@@ -109,8 +109,10 @@ def menu_json(restaurant_id):
     return jsonify(MenuItems=[item.serialize for item in items])
 
 
-@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON')
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/JSON/')
+@app.route('/restaurant/<int:restaurant_id>/<int:menu_id>/json/')
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON/')
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/json/')
 def item_json(restaurant_id, menu_id):
     """ handler to provide json for an individual item """
     item = session.query(MenuItem).filter_by(id=menu_id
@@ -176,7 +178,8 @@ def fbconnect():
     result = http_.request(url, 'GET')[1]
 
     # use token to get info from fb api
-    userinfo_url = 'https://graph.facebook.com/v2.4/me'
+    # userinfo_url = 'https://graph.facebook.com/v2.4/me'
+
     # Strip expire tag from access token
     token = result.split('&')[0]
     # The token must be stored in the login_session in order to properly
@@ -510,6 +513,8 @@ def new_menu_item(restaurant_id):
             if request.method == 'POST':
                 newItem = MenuItem(name=request.form['name'],
                                    course=request.form['course'],
+                                   picture_url=request.form['picture_url'],
+                                   alt_text=request.form['alt_text'],
                                    description=request.form['description'],
                                    price=request.form['price'],
                                    user_id=restaurant.user_id,
@@ -547,6 +552,8 @@ def edit_menu_item(restaurant_id, menu_id):
                 if request.form['name']:
                     editItem.name = request.form['name']
                     editItem.course = request.form['course']
+                    editItem.picture_url = request.form['picture_url'],
+                    editItem.alt_text = request.form['alt_text'],
                     editItem.description = request.form['description']
                     editItem.price = request.form['price']
                     session.add(editItem)
