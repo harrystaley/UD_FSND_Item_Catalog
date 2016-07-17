@@ -76,6 +76,7 @@ class MenuItem(Base):
             'course': self.course
         }
 
+
 # END CONFIG CODE
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.create_all(engine)

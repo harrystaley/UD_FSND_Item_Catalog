@@ -17,6 +17,11 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 from werkzeug.utils import secure_filename
 
+# DATA VIZ DEPENDENCIES
+from sqlalchemy import func
+from sqlalchemy.sql import label
+
+
 
 __author__ = "Harry Staley <staleyh@gmail.com>"
 __version__ = "1.0"
@@ -56,7 +61,38 @@ def uploaded_file(filename):
                                filename)
 
 
+# DATA VIZUALIZATIONS
+def getCourseJson():
+    """ gets the course data and pushes it into a json """
+    courses = session.query(label('name', MenuItem.course), label('count', func.count(MenuItem.course))).group_by(MenuItem.course).all()
+    return jsonify(courses=courses)
+
+
+def getPriceData():
+    price_data = []
+
+
+@app.route('/dashboard')
+def dashboard():
+    """ gets the json data and renders the dashboard """
+    courses = session.query(label('name', MenuItem.course), label('count', func.count(MenuItem.course))).group_by(MenuItem.course).all()
+    labels = []
+    for course in session.query(label('name', MenuItem.course)).group_by(MenuItem.course).all():
+        labels.append(str(course.name))
+    print labels
+    values = []
+    for course in session.query(label('value', func.count(MenuItem.course))).group_by(MenuItem.course).all():
+        values.append(course.value)
+    print values
+    return render_template('dashboard.html', labels=labels, values=values)
+
+
 # JSON REQUEST HANDLERS
+@app.route('/dashboard/JSON')
+def dashboard_json():
+    return getCourseJson()
+
+
 @app.route('/restaurant/JSON')
 def restaurnts_json():
     """ handler to provide a list of restaurants in the form of a json """
